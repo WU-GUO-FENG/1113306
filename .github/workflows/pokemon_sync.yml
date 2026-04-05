@@ -21,7 +21,7 @@ jobs:
         run: pip install requests
 
       - name: 執行抓取程式
-        run: python fetch_pokemon.py
+        run: python app.py
 
       - name: 將更新後的資料推回儲存庫
         run: |
