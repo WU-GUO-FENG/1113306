@@ -1,0 +1,32 @@
+name: Daily Pokemon Data Sync
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  
+  workflow_dispatch:      # 允許手動點擊執行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 檢出專案程式碼
+        uses: actions/checkout@v3
+
+      - name: 設定 Python 環境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 安裝必要套件
+        run: pip install requests
+
+      - name: 執行抓取程式
+        run: python fetch_pokemon.py
+
+      - name: 將更新後的資料推回儲存庫
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add pokemon_data.json
+          git commit -m "自動更新寶可夢資料: $(date)" || exit 0
+          git push
